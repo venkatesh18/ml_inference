@@ -85,7 +85,7 @@ neuron_model_pred = list()
 
 for idx in np.arange(n):
     orig_model_pred.append(idx2label[top_n_orig[idx]])
-    neuron_model_pred.append(idx2label[[top_n_neuron[idx]]])
+    neuron_model_pred.append(idx2label[top_n_neuron[idx]])
 
 print()
 print('Original Model      - Top %d matching labels:' % n, orig_model_pred)
