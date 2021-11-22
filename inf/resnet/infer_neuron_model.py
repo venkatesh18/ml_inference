@@ -113,8 +113,8 @@ def benchmark(num_models, num_threads, num_requests, model_file):
 
 # test_time, latency_array = benchmark(num_models, num_threads, num_requests, neuron_model_file)
 test_time = benchmark(num_models, num_threads, num_requests, neuron_model_file)
-latency_metrics = np.percentile(np.array(latency_list), [50, 90, 95])
+latency_metrics = np.percentile(np.array(latency_list) * 1000, [50, 90, 95])
 print('Latency: [P50, P90, P95] milli seconds')
 print(np.round(latency_metrics, 3), 'milli seconds')
-print('Total time taken for %d images is %0.4f seconds' % (total_images, test_time))
-print('Throughput (images /sec) = %0.4f' % (total_images / test_time))
+print('Total time taken for %d images is %0.2f seconds' % (total_images, test_time))
+print('Throughput (images /sec) = %0.2f' % (total_images / test_time))
