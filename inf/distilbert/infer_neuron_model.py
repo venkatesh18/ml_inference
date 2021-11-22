@@ -12,22 +12,14 @@ from concurrent.futures import ThreadPoolExecutor
 from essential_generators import DocumentGenerator
 
 
-# Setting up NeuronCore groups for inf1.6xlarge with 16 cores
-num_neuron_chips = int(subprocess.getoutput('ls /dev/neuron* | wc -l'))
-num_cores = 4 * num_neuron_chips
-nc_env = ','.join(['1'] * num_cores)
-print('Neuron Core Group Sizes: %s'%(nc_env))
-os.environ['NEURONCORE_GROUP_SIZES'] = nc_env
-os.environ['TOKENIZERS_PARALLELISM'] = 'False'
-
 # Benchmark test parameters - Number of models, threads, total number of requests
 num_models = 1  # num_models <= number of cores (4 for inf1.xl and inf1.2xl, 16 for inf1.6xl)
 num_threads = num_models * 1  # Setting num_threads to num_models works well.
-num_requests = 5000
+num_requests = 10000
 
 # Input parameters : token length, batch size
 max_length = 64
-batch_size = 4
+batch_size = 1
 model_name = 'distilbert-base-uncased'
 
 total_sentences = num_requests * batch_size
@@ -35,6 +27,14 @@ print('Benchmark Test Parameters')
 print('Input batch Size = %d' % batch_size)
 print('Number of requests = %d' % num_requests)
 print('Total number of sentences (num_requests x batch_size) = %d' % total_sentences)
+
+# Setting up NeuronCore groups for inf1.6xlarge with 16 cores
+num_neuron_chips = int(subprocess.getoutput('ls /dev/neuron* | wc -l'))
+num_cores = 4 * num_neuron_chips
+nc_env = ','.join(['1'] * num_cores)
+print('Neuron Core Group Sizes: %s'%(nc_env))
+os.environ['NEURONCORE_GROUP_SIZES'] = nc_env
+os.environ['TOKENIZERS_PARALLELISM'] = 'False'
 
 # Neuron file name
 neuron_model_file = '%s_inf_%d_%d.pt'%(model_name, max_length, batch_size)
@@ -46,7 +46,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 gen = DocumentGenerator()
 sequence_list = []
 encoded_input_list = []
-num_samples = 10
+num_samples = 100
 
 for _ in np.arange(num_samples):
     sequence = gen.sentence()
@@ -95,7 +95,6 @@ def benchmark(num_models, num_threads, num_requests, model_file):
             for i in range(num_requests):
                 futures.append(pool.submit(task, models[i % len(models)], random.choice(encoded_input_list)))
                 # output_list.append(output.result())
-            print('Loaded Requests')
             for _ in concurrent.futures.as_completed(futures):
                 pbar.update(1)
     test_time = time.time() - begin
