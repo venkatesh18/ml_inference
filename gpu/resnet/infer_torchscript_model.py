@@ -42,7 +42,7 @@ preprocess = transforms.Compose([
 data_dir = './data'
 img_preprocessed_list = list()
 img_file_list = os.listdir(data_dir)
-img_file_list = [x for x in jpg_file_list if '.jpg' in x]
+img_file_list = [x for x in img_file_list if '.jpg' in x]
 num_images = len(img_file_list)
 
 # Preprocess the images
@@ -57,7 +57,7 @@ ts_model_file = 'resnet50_gpu_%d_%d.pt'%(image_size, batch_size)
 
 # Function to load the model
 def load_model(file_name, torchscript):
-    with torch.cuda.amp.autocast(enabled=half_precision):
+    with torch.cuda.amp.autocast(enabled=mixed_precision):
         if torchscript:
             model = torch.jit.load(file_name)
             model.eval()
@@ -75,7 +75,7 @@ latency_list = []
 def task(model, cur_img_preprocess):
     global latency_list
     begin = time.time()
-    with torch.cuda.amp.autocast(enabled=half_precision):
+    with torch.cuda.amp.autocast(enabled=mixed_precision):
         batch_input_tensor = torch.cat([cur_img_preprocess] * batch_size)
         batch_input_tensor_gpu = batch_input_tensor.cuda()
         prediction = model(batch_input_tensor_gpu)
@@ -90,14 +90,14 @@ def benchmark(num_models, num_threads, num_requests, model_file, torchscript=Tru
     print('Loading Models To Memory')
     models = [load_model(model_file, torchscript) for _ in range(num_models)]
     print('Starting benchmark')
-    output_list = []
+    #output_list = []
     begin = time.time()
     futures = []
     # Submit all tasks and wait for them to finish
     with tqdm(total=num_requests) as pbar:
         with ThreadPoolExecutor(num_threads) as pool:
             for i in range(num_requests):
-                futures.append(pool.submit(task, models[i % len(models)], random.choice(img_preprocessed_list)))
+                futures.append(pool.submit(task, models[i % len(models)], img_preprocessed_list[i % num_images]))
                 #output_list.append(output.result())
             for _ in concurrent.futures.as_completed(futures):
                 pbar.update(1)
