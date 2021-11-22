@@ -3,7 +3,7 @@ import torch
 import torchvision
 from PIL import Image
 from torchvision import transforms
-from json
+import json
 
 
 # Set image size and input batch size
@@ -55,7 +55,8 @@ orig_output = model_ft_gpu(batch_img_cat_tensor_gpu).cpu()
 ts_model = torch.jit.script(model_ft_gpu, (batch_img_cat_tensor_gpu))
 
 # Torchscript model name
-ts_model_file = '%s_gpu_%d_%d.pt'%(default_model_name,image_size, batch_size)
+model_name = 'resnet50'
+ts_model_file = '%s_gpu_%d_%d.pt'%(model_name, image_size, batch_size)
 
 # Save the torchscript model
 ts_model.save(ts_model_file)
@@ -74,7 +75,7 @@ ts_model_pred = list()
 
 for idx in np.arange(n):
     orig_model_pred.append(idx2label[top_n_orig[idx]])
-    ts_model_pred.append(idx2label[[top_n_ts[idx]]])
+    ts_model_pred.append(idx2label[top_n_ts[idx]])
 
 print()
 print('Original Model      - Top %d matching labels:' % n, orig_model_pred)

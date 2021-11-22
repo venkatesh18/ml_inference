@@ -1,11 +1,11 @@
 import numpy as np
+import time
 import json
 import torch
 import torch.neuron
 from PIL import Image
 import torchvision
 from torchvision import transforms
-import time
 
 
 # Set image size and input batch size
@@ -54,7 +54,7 @@ orig_output = model_ft(batch_img_cat_tensor)
 
 # Compile the model
 model_name = 'resnet50'
-neuron_model_file = '%s_inf_%d_%d.pt'%(model_name,image_size, batch_size)
+neuron_model_file = '%s_inf_%d_%d.pt'%(model_name, image_size, batch_size)
 
 ts = time.time()
 print('Starting model compilation')
