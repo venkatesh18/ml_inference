@@ -23,7 +23,7 @@ os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 # Benchmark test parameters - Number of models, threads, total number of requests
 num_models = 1  # num_models <= number of cores (4 for inf1.xl and inf1.2xl, 16 for inf1.6xl)
 num_threads = num_cores * 1  # Setting num_threads to num_models works well.
-num_requests = 5000
+num_requests = 10000
 
 # Set image size and input batch size
 image_size = 224

@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 
 # Benchmark test parameters
-num_requests = 5000
+num_requests = 10000
 num_models = 1
 num_threads = num_models * 1
 mixed_precision = True
