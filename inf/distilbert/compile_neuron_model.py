@@ -1,4 +1,3 @@
-import os
 import torch
 import torch.neuron
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
@@ -21,7 +20,7 @@ batch_input_ids_tensor = torch.cat([input_ids_tensor] * batch_size)
 attention_mask_tensor = encoded_inputs['attention_mask']
 batch_attention_mask_tensor = torch.cat([attention_mask_tensor] * batch_size)
 
-# create input tuple
+# Create input tuple
 sample_input = batch_input_ids_tensor, batch_attention_mask_tensor
 
 # Get the pre-trained model 
@@ -31,7 +30,7 @@ orig_model = AutoModelForSequenceClassification.from_pretrained(model_name, retu
 orig_output = orig_model(*sample_input)
 
 # Compile the model
-neuron_model = torch.neuron.trace(orig_model, neuron_input)
+neuron_model = torch.neuron.trace(orig_model, sample_input)
 
 # Save the compiled model for later use
 neuron_model_file = '%s_inf_%d_%d.pt'%(model_name, max_length, batch_size)
