@@ -1,9 +1,9 @@
 # Instructions for compiling and performing inference
 
 ```
-This file provides the instructions for compiling the pre-trained RESNET50 model, with torch neuron, 
-and for performing inference with the compiled model. The python scripts in this example should be 
-executed on an EC2 inf1.2xlarge instance, with Ubuntu 18:04 DLAMI.
+This file provides the instructions for compiling the pre-trained DISTILBERT BASE UNCASED MNLI model, 
+with torch neuron, and for performing inference with the compiled model. The python scripts in this 
+example should be executed on an EC2 inf1.2xlarge instance, with Ubuntu 18:04 DLAMI.
 ```
 
 ## Setting the neuron pytorch environment
@@ -16,15 +16,19 @@ Execute the command below in the terminal to activate this neuron pytorch enviro
 'conda activate aws_neuron_pytorch_p36'
 
 If this environment is unavailable, choose the available neuron pytorch environment.
+
+Execute the following commands to install the required packages
+'pip install transformers'
+'pip install essential_generators'
 ```
 
 ## Compile the model
 
 ```
-To compile the RESNET50 model, run 'compile_neuron_model.py' with the command
+To compile the DISTILBERT model, run 'compile_neuron_model.py' with the command
 'python compile_neuron_model.py'
 
-The model compilation may take 2 to 3 minutes.
+The model compilation may take a few minutes.
 
 The compiled model is stored in the same folder that contains this file.
 ```
@@ -34,3 +38,4 @@ The compiled model is stored in the same folder that contains this file.
 ```
 To perform inference, run 'infer_neuron_model.py' with the command
 'python infer_neuron_model.py'
+
