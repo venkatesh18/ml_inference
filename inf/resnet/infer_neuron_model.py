@@ -60,14 +60,12 @@ for cur_image_file in img_file_list:
     cur_image_preprocessed_unsqueeze = torch.unsqueeze(cur_image_preprocessed, 0)
     img_preprocessed_list.append(cur_image_preprocessed_unsqueeze)
 
-
 # Neuron file name
 model_name = 'resnet50'
 neuron_model_file = '%s_inf_%d_%d.pt'%(model_name,image_size, batch_size)
 
 # Function to load the model
 def load_model(file_name):
-    # Load modelbase
     model = torch.jit.load(file_name)
 
     return model
@@ -81,7 +79,7 @@ def task(model, cur_img_preprocess):
 
     batch_input_tensor = torch.cat([cur_img_preprocess] * batch_size)
 
-    prediction = model(batch_input_tensor)
+    _ = model(batch_input_tensor)
     latency_time = time.time() - begin
 
     latency_list.append(latency_time)
