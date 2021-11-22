@@ -17,8 +17,7 @@ model_name = 'distilbert-base-uncased' # model name
 # Benchmark test parameters - Number of models, threads, total number of requests
 num_models = 1  # num_models <= number of cores (4 for inf1.xl and inf1.2xl, 16 for inf1.6xl)
 num_threads = num_models * 1  # Setting num_threads to num_models works well.
-num_requests = 5000
-num_request_samples = 10
+num_requests = 10000
 mixed_precision = True
 
 total_sentences = num_requests * batch_size
@@ -37,7 +36,9 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 gen = DocumentGenerator()
 sequence_list = []
 encoded_input_list = []
-for _ in np.arange(num_request_samples):
+num_samples = 100
+
+for _ in np.arange(num_samples):
     sequence = gen.sentence()
     encoded_inputs = tokenizer.encode_plus(sequence, max_length=max_length, padding='max_length', truncation=True,
                                            return_tensors='pt')
