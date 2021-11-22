@@ -9,13 +9,13 @@ example should be executed on an EC2 inf1.2xlarge instance, with Ubuntu 18:04 DL
 ## Setting the neuron pytorch environment
 
 ```
-On a inf1.2xlarge instance, type 'conda env list' on the terminal to list all the available environments.
+On a inf1.2xlarge instance, type 'conda env list' on the terminal to list the available environments.
 One of the available environments would be 'aws_neuron_pytorch_p36'.
 
 Execute the command below in the terminal to activate this neuron pytorch environment.
 'conda activate aws_neuron_pytorch_p36'
 
-If this environment is unavailable, choose the available neuron pytorch environment.
+If this environment is not present, activate the available neuron pytorch environment.
 
 Execute the following commands to install the required packages
 'pip install transformers'
