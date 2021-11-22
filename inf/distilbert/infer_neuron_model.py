@@ -19,7 +19,7 @@ num_requests = 10000
 
 # Input parameters : token length, batch size
 max_length = 64
-batch_size = 1
+batch_size = 4
 model_name = 'distilbert-base-uncased'
 
 total_sentences = num_requests * batch_size

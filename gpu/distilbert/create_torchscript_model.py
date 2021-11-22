@@ -5,7 +5,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 # Input parameters
 max_length = 64   # Maximum token length
-batch_size = 1    # Input batch size
+batch_size = 4    # Input batch size
 model_name = 'distilbert-base-uncased' # model name
 
 print('Model name: %s' % model_name)
