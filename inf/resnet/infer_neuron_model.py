@@ -62,7 +62,8 @@ for cur_image_file in img_file_list:
 
 
 # Neuron file name
-neuron_model_file = 'resnet50_inf_%d_%d.pt'%(image_size, batch_size)
+model_name = 'resnet50'
+neuron_model_file = '%s_inf_%d_%d.pt'%(model_name,image_size, batch_size)
 
 # Function to load the model
 def load_model(file_name):

@@ -53,7 +53,8 @@ for key in remove_attributes:
 orig_output = model_ft(batch_img_cat_tensor)
 
 # Compile the model
-neuron_model_file = '%s_inf_%d_%d.pt'%(default_model_name,image_size, batch_size)
+model_name = 'resnet50'
+neuron_model_file = '%s_inf_%d_%d.pt'%(model_name,image_size, batch_size)
 
 ts = time.time()
 print('Starting model compilation')
