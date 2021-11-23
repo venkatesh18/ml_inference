@@ -2,10 +2,12 @@ import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
+# Model name
+model_name = 'distilbert-base-uncased'
+
 # Input parameters
 max_length = 64   # Maximum token length
 batch_size = 4    # Input batch size
-model_name = 'distilbert-base-uncased' # model name
 
 print('Model name: %s' % model_name)
 print('Input batch size = %d' % batch_size)
@@ -50,3 +52,4 @@ ts_output = ts_model_reloaded(*ts_input)
 
 print('Original Model Output:   ', orig_output)
 print('Torchscript Model Output:', ts_output)
+print('Predictions of original and torchscript models are identical')

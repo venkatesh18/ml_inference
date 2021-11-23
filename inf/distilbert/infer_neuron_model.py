@@ -12,6 +12,17 @@ from concurrent.futures import ThreadPoolExecutor
 from essential_generators import DocumentGenerator
 
 
+# Setting up NeuronCore groups
+num_neuron_chips = int(subprocess.getoutput('ls /dev/neuron* | wc -l')) # number of inferentia chips
+num_cores = 4 * num_neuron_chips                # each chip has 4 NeuronCores
+nc_env = ','.join(['1'] * num_cores)            # set each group = 1 core
+print('Neuron Core Group Sizes: %s'%(nc_env))
+os.environ['NEURONCORE_GROUP_SIZES'] = nc_env
+os.environ['TOKENIZERS_PARALLELISM'] = 'False'
+
+# Model name
+model_name = 'distilbert-base-uncased'
+
 # Benchmark test parameters - Number of models, threads, total number of requests
 num_models = 1  # num_models <= number of cores (4 for inf1.xl and inf1.2xl, 16 for inf1.6xl)
 num_threads = num_models * 1  # Setting num_threads to num_models works well.
@@ -20,21 +31,12 @@ num_requests = 10000
 # Input parameters : token length, batch size
 max_length = 64
 batch_size = 4
-model_name = 'distilbert-base-uncased'
-
 total_sentences = num_requests * batch_size
+
 print('Benchmark Test Parameters')
 print('Input batch Size = %d' % batch_size)
 print('Number of requests = %d' % num_requests)
 print('Total number of sentences (num_requests x batch_size) = %d' % total_sentences)
-
-# Setting up NeuronCore groups for inf1.6xlarge with 16 cores
-num_neuron_chips = int(subprocess.getoutput('ls /dev/neuron* | wc -l'))
-num_cores = 4 * num_neuron_chips
-nc_env = ','.join(['1'] * num_cores)
-print('Neuron Core Group Sizes: %s'%(nc_env))
-os.environ['NEURONCORE_GROUP_SIZES'] = nc_env
-os.environ['TOKENIZERS_PARALLELISM'] = 'False'
 
 # Neuron file name
 neuron_model_file = '%s_inf_%d_%d.pt'%(model_name, max_length, batch_size)

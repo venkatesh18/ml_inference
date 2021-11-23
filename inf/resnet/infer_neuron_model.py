@@ -11,23 +11,23 @@ from torchvision import transforms
 from tqdm import tqdm
 
 
-# Setting up NeuronCore groups for inf1.6xlarge with 16 cores
-# num_cores = 4 # This value should be 4 on inf1.xlarge and inf1.2xlarge
-num_neuron_chips = int(subprocess.getoutput('ls /dev/neuron* | wc -l'))
-num_cores = 4 * num_neuron_chips
-nc_env = ','.join(['1'] * num_cores)
+# Setting up NeuronCore groups
+num_neuron_chips = int(subprocess.getoutput('ls /dev/neuron* | wc -l')) # number of inferentia chips
+num_cores = 4 * num_neuron_chips                # each chip has 4 NeuronCores
+nc_env = ','.join(['1'] * num_cores)            # set each group = 1 core
 print('Neuron Core Group Sizes: %s'%(nc_env))
 os.environ['NEURONCORE_GROUP_SIZES'] = nc_env
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
-# Benchmark test parameters - Number of models, threads, total number of requests
-num_models = 1  # num_models <= number of cores (4 for inf1.xl and inf1.2xl, 16 for inf1.6xl)
-num_threads = num_models * 1  # Setting num_threads to num_models works well.
-num_requests = 10000
-
 # Set image size and input batch size
 image_size = 224
 batch_size = 4
+
+# Benchmark test parameters
+num_requests = 10000 # number of requests
+num_models = 1  # num_models <= number of cores (4 for inf1.xl and inf1.2xl, 16 for inf1.6xl)
+num_threads = num_models * 1  # Setting num_threads to num_models works well.
+
 total_images = num_requests * batch_size
 
 print('Benchmark Test Parameters')
@@ -35,6 +35,10 @@ print('Image Size = %d x %d' % (image_size, image_size))
 print('Input Batch Size = %d' % batch_size)
 print('Number of requests = %d' % num_requests)
 print('Total number of images (num_requests x batch_size) = %d' % total_images)
+
+# Neuron file name
+model_name = 'resnet50'
+neuron_model_file = '%s_inf_%d_%d.pt'%(model_name,image_size, batch_size)
 
 # Create a preprocessing pipeline
 preprocess = transforms.Compose([
@@ -59,10 +63,6 @@ for cur_image_file in img_file_list:
     cur_image_preprocessed = preprocess(cur_image)
     cur_image_preprocessed_unsqueeze = torch.unsqueeze(cur_image_preprocessed, 0)
     img_preprocessed_list.append(cur_image_preprocessed_unsqueeze)
-
-# Neuron file name
-model_name = 'resnet50'
-neuron_model_file = '%s_inf_%d_%d.pt'%(model_name,image_size, batch_size)
 
 # Function to load the model
 def load_model(file_name):

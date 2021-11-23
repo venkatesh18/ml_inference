@@ -8,6 +8,9 @@ import torchvision
 from torchvision import transforms
 
 
+# Get the pre-trained resnet50 model
+model_ft = torchvision.models.resnet50(pretrained=True)
+
 # Set image size and input batch size
 image_size = 224
 batch_size = 4
@@ -36,10 +39,7 @@ img_cat_preprocessed = preprocess(img_cat)
 img_cat_preprocessed_unsqueeze = torch.unsqueeze(img_cat_preprocessed, 0)
 batch_img_cat_tensor = torch.cat([img_cat_preprocessed_unsqueeze] * batch_size)
 
-# Get the pre-trained resnet50 model
-model_ft = torchvision.models.resnet50(pretrained=True)
 model_ft.eval()
-
 # Remove None Attributes
 remove_attributes = []
 for key, value in vars(model_ft).items():

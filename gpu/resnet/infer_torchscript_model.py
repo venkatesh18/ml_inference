@@ -10,15 +10,16 @@ from torchvision import transforms
 from tqdm import tqdm
 
 
-# Benchmark test parameters
-num_requests = 10000
-num_models = 1
-num_threads = num_models * 1
-mixed_precision = True
-
 # Image size and input batch size
 image_size = 224
 batch_size = 4
+
+# Benchmark test parameters
+num_requests = 10000 # number of requests
+num_models = 1 # number of models
+num_threads = num_models * 1 # number of threads
+mixed_precision = True # allow mixed precision
+
 total_images = num_requests * batch_size
 
 print('Benchmark Test Parameters')
@@ -27,6 +28,9 @@ print('Input Batch Size = %d' % batch_size)
 print('Number of requests = %d' % num_requests)
 print('Total number of images (num_requests x batch_size) = %d' % total_images)
 print('Mixed Precision = ', mixed_precision)
+
+# Torchscript model name
+ts_model_file = 'resnet50_gpu_%d_%d.pt'%(image_size, batch_size)
 
 # Create a preprocessing pipeline
 preprocess = transforms.Compose([
@@ -52,8 +56,6 @@ for cur_image_file in img_file_list:
     cur_image_preprocessed_unsqueeze = torch.unsqueeze(cur_image_preprocessed, 0)
     img_preprocessed_list.append(cur_image_preprocessed_unsqueeze)
 
-# Torchscript model name
-ts_model_file = 'resnet50_gpu_%d_%d.pt'%(image_size, batch_size)
 
 # Function to load the model
 def load_model(file_name, torchscript):

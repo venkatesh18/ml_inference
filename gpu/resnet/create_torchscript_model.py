@@ -6,6 +6,9 @@ from torchvision import transforms
 import json
 
 
+# Get the pre-trained resnet50 model
+model_ft_gpu = torchvision.models.resnet50(pretrained=True).cuda()
+
 # Set image size and input batch size
 image_size = 224
 batch_size = 4
@@ -35,10 +38,7 @@ img_cat_preprocessed_unsqueeze = torch.unsqueeze(img_cat_preprocessed, 0)
 batch_img_cat_tensor = torch.cat([img_cat_preprocessed_unsqueeze] * batch_size)
 batch_img_cat_tensor_gpu = batch_img_cat_tensor.cuda()
 
-# Get the pre-trained resnet50 model
-model_ft_gpu = torchvision.models.resnet50(pretrained=True).cuda()
 model_ft_gpu.eval()
-
 # Remove None Attributes
 remove_attributes = []
 for key, value in vars(model_ft_gpu).items():

@@ -9,16 +9,18 @@ from tqdm import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 
+# Model name
+model_name = 'distilbert-base-uncased'
+
 # Input parameters
 max_length = 64   # Maximum token length
 batch_size = 4    # Input batch size
-model_name = 'distilbert-base-uncased' # model name
 
-# Benchmark test parameters - Number of models, threads, total number of requests
-num_models = 1  # num_models <= number of cores (4 for inf1.xl and inf1.2xl, 16 for inf1.6xl)
+# Benchmark test parameters
+num_requests = 10000 # total number of requests
+num_models = 1  # number of models
 num_threads = num_models * 1  # Setting num_threads to num_models works well.
-num_requests = 10000
-mixed_precision = True
+mixed_precision = True  # allow mixed precision
 
 total_sentences = num_requests * batch_size
 print('Benchmark Test Parameters')
