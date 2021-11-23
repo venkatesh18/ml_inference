@@ -16,6 +16,10 @@ Execute the command below in the terminal to activate a pytorch environment.
 'conda activate pytorch_latest_p37'
 
 If this environment is not present, activate the available pytorch environment.
+
+Execute the following commands to install the required packages
+'pip install transformers'
+'pip install essential_generators'
 ```
 
 ## Torchscript the model
